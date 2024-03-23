@@ -1,17 +1,17 @@
-import { useState} from "react";
+import { useState } from "react";
 import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import {auth} from '../firebase';
 
-export default function Login({navigation}) {
-
+export default function Cadastro({navigation}) {
+  
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [ signInWithEmailAndPassword , user, error ] = 
-  useSignInWithEmailAndPassword(auth); 
+  const [  createUserWithEmailAndPassword, user, error ] = 
+  useCreateUserWithEmailAndPassword(auth); 
 
-  function login() {
-    signInWithEmailAndPassword(email,senha);
+  function cadastro() {
+    createUserWithEmailAndPassword(email,senha);
 
     if(user) {
       return navigation.navigate('Chat');
@@ -20,8 +20,6 @@ export default function Login({navigation}) {
     if(error){
       return <View>os dados estão incorretos</View>
     }
-
-    return null;
   }
 
 
@@ -43,14 +41,14 @@ export default function Login({navigation}) {
 
       <TouchableOpacity
         style={styles.botao}
-        onPress={() =>('Chat')
-        }
+        onPress={()=>{
+          cadastro();}}
       >
         <Text style={styles.botaotexto}>Logar</Text>
       </TouchableOpacity>
-      <Text style={{marginTop: 25, flexDirection: "row", alignItems: "center", alignSelf: "center"}}>Não possui uma conta?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-        <Text style={{fontWeight: 'bold', color: '#0000CD', fontSize: 15}}>Cadastro</Text>
+      <Text style={{marginTop: 25, flexDirection: "row", alignItems: "center", alignSelf: "center",}}>Já possui uma conta?</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Login', {cadastro:cadastro})}>
+        <Text style={{fontWeight: 'bold', color: '#0000CD', fontSize: 15}}>Entrar</Text>
       </TouchableOpacity>
     </View>
   );
