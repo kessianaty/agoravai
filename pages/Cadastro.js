@@ -1,26 +1,43 @@
 import { useState } from "react";
-import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { Text, TextInput, View, StyleSheet } from "react-native";
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth';
 import {auth} from '../firebase';
+import Firebase from '../firebase';
 
-export default function Cadastro({navigation}) {
+export default function Cadastro() {
   
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [  createUserWithEmailAndPassword, user, error ] = 
-  useCreateUserWithEmailAndPassword(auth); 
+  const [senha2, setSenha2] = useState('');
 
-  function cadastro() {
-    createUserWithEmailAndPassword(email,senha);
-
-    if(user) {
-      return navigation.navigate('Chat');
-  }
-
-    if(error){
-      return <View>os dados estão incorretos</View>
+  const confirmar = () => {
+    if(senha != senha2){
+      alert("Senhas não coincidem")
+    }
+    else if(senha == "" || senha2 == "" || email == ""){
+      alert("Preencha todos os campos")
+    }
+    else{
+      alert("Conta criada com sucesso");
+      handleRegister()
+      navigation.navigate("Login")
     }
   }
+
+
+  function cadastro() {
+    createUserWithEmailAndPassword(auth, email, senha)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorMessage = error.message;
+            alert(errorMessage);
+            console.log(errorMessage);
+        });
+      }
 
 
   return (
@@ -37,6 +54,13 @@ export default function Cadastro({navigation}) {
         placeholder="Digite o Senha"
         onChangeText={(senha) => setSenha(senha)}
         value={senha}
+      />
+
+      <TextInput
+        style={styles.TextoInput}
+        placeholder="Digite o Senha"
+        onChangeText={(senha2) => setSenha2(senha2)}
+        value={senha2}
       />
 
       <TouchableOpacity

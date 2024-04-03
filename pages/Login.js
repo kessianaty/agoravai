@@ -1,27 +1,38 @@
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native";
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useNavigation } from '@react-navigation/native';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from '@firebase/auth';
 import {auth} from '../firebase';
+import Firebase from '../firebase';
 
-export default function Login({navigation}) {
+export default function Login() {
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [ signInWithEmailAndPassword , user, error ] = 
-  useSignInWithEmailAndPassword(auth); 
+  const [user, setUser] = useState('');
+  const navigation = useNavigation();
+  const auth = getAuth();
 
   function login() {
-    signInWithEmailAndPassword(email,senha);
-
-    if(user) {
-      return navigation.navigate('Chat');
+    signInWithEmailAndPassword(auth, email, senha).catch(function (error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      alert(errorCode, errorMessage);
+    });
   }
 
-    if(error){
-      return <View>os dados estão incorretos</View>
-    }
+  useEffect(() => {
+    onAuthStateChanged(auth, function (user) {
+      setUser(user);
+    });
 
-    return null;
+  }, []);
+
+  if (user) {
+    alert('Bem-Vindo' + user.uid);
+    return navigation.navigate('Chat', { email: user.email });
+  } else {
+    // ...
   }
 
 
@@ -43,7 +54,9 @@ export default function Login({navigation}) {
 
       <TouchableOpacity
         style={styles.botao}
-        onPress={() =>('Chat')
+        onPress={() =>{
+          login();
+        }
         }
       >
         <Text style={styles.botaotexto}>Logar</Text>
