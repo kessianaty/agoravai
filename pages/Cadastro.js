@@ -5,7 +5,7 @@ import { getAuth, createUserWithEmailAndPassword } from '@firebase/auth';
 import {auth} from '../firebase';
 import Firebase from '../firebase';
 
-export default function Cadastro() {
+export default function Cadastro({navigation}) {
   
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -71,7 +71,7 @@ export default function Cadastro() {
         <Text style={styles.botaotexto}>Logar</Text>
       </TouchableOpacity>
       <Text style={{marginTop: 25, flexDirection: "row", alignItems: "center", alignSelf: "center",}}>Já possui uma conta?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Login', {cadastro:cadastro})}>
+      <TouchableOpacity onPress={ navigation.navigate("Login")}>
         <Text style={{fontWeight: 'bold', color: '#0000CD', fontSize: 15}}>Entrar</Text>
       </TouchableOpacity>
     </View>

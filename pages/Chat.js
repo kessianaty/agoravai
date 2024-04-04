@@ -17,21 +17,21 @@ export default function Chat() {
       const q = query(collection(database, 'chats'), orderBy('createAdt', 'desc'));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         const data = snapshot.docs.map((doc) => ({
-          _id: doc.data().id,
+          _id: doc.id,
           createAdt: doc.data().createAdt.toDate(),
           text: doc.data().text,
           user: doc.data().user,
         }));
         setMessages(data);
       });
-
+  
       return () => {
         unsubscribe();
       };
     }
-
+  
     getMessages();
-  }, [email]);
+  }, [email]);  
 
   const onSend = useCallback((messages = []) => {
     const { _id, createdAt, text, user } = messages[0];
@@ -45,11 +45,13 @@ export default function Chat() {
 
   return (
     <GiftedChat
-      messages={messages}
-      onSend={onSend}
-      user={{
-        _id: email,
-      }}
-    />
-  );
+    messages={messages}
+    onSend={onSend}
+    user={{
+      _id: email, 
+      name: 'Nome do usuário', // Adicione uma propriedade 'name' 
+      avatar: 'URL do avatar', // Adicione uma propriedade 'avatar' 
+    }}
+  />
+);
 }
