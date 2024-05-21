@@ -30,7 +30,7 @@ export default function Login() {
 
   useEffect(() => {
     if (user) {
-      alert('Bem-Vindo' + user.email);
+      alert('Bem-Vindo ' + user.email);
       navigation.navigate('BuscaChat', { email: user.email, user: user.email  });
     }
   }, [user, navigation]);
